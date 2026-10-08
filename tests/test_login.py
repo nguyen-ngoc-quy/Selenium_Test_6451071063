@@ -110,3 +110,20 @@ def test_tc06_login_invalid_credentials(driver):
     assert login_page.is_error_displayed(), "Không hiển thị thông báo lỗi khi thông tin đăng nhập sai"
     error_msg = login_page.get_error_message()
     assert "Tài khoản hoặc mật khẩu không đúng" in error_msg, f"Nội dung lỗi không chính xác: {error_msg}"
+
+
+def test_tc07_login_whitespace_credentials(driver):
+    """TC07: Kiểm tra đăng nhập khi nhập toàn bộ ký tự khoảng trắng."""
+    login_page = LoginPage(driver)
+    login_page.load()
+
+    # Nhập khoảng trắng vào username và password
+    login_page.login("     ", "     ")
+
+    # 1. Xác minh hệ thống không cho phép đăng nhập
+    assert "/Login" in login_page.get_current_url(), "Hệ thống chuyển hướng sai khi nhập khoảng trắng"
+
+    # 2. Xác minh hệ thống hiển thị thông báo lỗi
+    assert login_page.is_error_displayed(), "Không có thông báo lỗi khi nhập dữ liệu toàn khoảng trắng"
+    error_msg = login_page.get_error_message()
+    assert len(error_msg.strip()) > 0, "Thông báo lỗi bị rỗng"
