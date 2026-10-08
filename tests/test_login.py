@@ -144,3 +144,20 @@ def test_tc08_remember_me_checkbox_interaction(driver):
     # 3. Click lần 2, trạng thái chuyển lại thành uncheck (False)
     login_page.toggle_remember_me()
     assert not login_page.is_remember_me_checked(), "Checkbox không uncheck sau lần click thứ hai"
+
+
+def test_tc09_login_submit_with_enter_key(driver):
+    """TC09: Kiểm tra gửi form đăng nhập bằng phím Enter từ bàn phím."""
+    login_page = LoginPage(driver)
+    login_page.load()
+
+    # Nhập thông tin và nhấn Enter thay vì click nút Đăng nhập
+    login_page.submit_with_enter(username="test_user_enter", password="test_password_enter")
+
+    # 1. Xác minh form được submit và trang vẫn ở đường dẫn /Login
+    assert "/Login" in login_page.get_current_url(), "Hệ thống không xử lý form khi nhấn Enter"
+
+    # 2. Xác minh hiển thị thông báo phản hồi từ máy chủ
+    assert login_page.is_error_displayed(), "Không hiển thị thông báo lỗi sau khi submit bằng phím Enter"
+    error_msg = login_page.get_error_message()
+    assert "Tài khoản hoặc mật khẩu không đúng" in error_msg, f"Thông báo không đúng: {error_msg}"
