@@ -57,3 +57,21 @@ def test_tc03_login_empty_password(driver):
     assert login_page.is_error_displayed(), "Không hiển thị thông báo lỗi khi để trống mật khẩu"
     error_msg = login_page.get_error_message()
     assert "Bạn chưa nhập mật khẩu" in error_msg, f"Nội dung lỗi không chính xác: {error_msg}"
+
+
+def test_tc04_login_empty_username(driver):
+    """TC04: Kiểm tra đăng nhập khi chỉ nhập Mật khẩu và để trống Tên đăng nhập."""
+    login_page = LoginPage(driver)
+    login_page.load()
+
+    # Để trống username, nhập password
+    login_page.enter_password("matkhau123")
+    login_page.click_login()
+
+    # 1. Xác minh hệ thống không cho phép đăng nhập
+    assert "/Login" in login_page.get_current_url(), "Hệ thống chuyển hướng sai khỏi trang đăng nhập"
+
+    # 2. Xác minh hiển thị thông báo lỗi yêu cầu nhập tên đăng nhập
+    assert login_page.is_error_displayed(), "Không hiển thị thông báo lỗi khi để trống tên đăng nhập"
+    error_msg = login_page.get_error_message()
+    assert "Bạn chưa nhập tên đăng nhập" in error_msg, f"Nội dung lỗi không chính xác: {error_msg}"
