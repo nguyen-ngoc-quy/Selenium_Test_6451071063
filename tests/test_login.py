@@ -161,3 +161,18 @@ def test_tc09_login_submit_with_enter_key(driver):
     assert login_page.is_error_displayed(), "Không hiển thị thông báo lỗi sau khi submit bằng phím Enter"
     error_msg = login_page.get_error_message()
     assert "Tài khoản hoặc mật khẩu không đúng" in error_msg, f"Thông báo không đúng: {error_msg}"
+
+
+def test_tc10_forgot_password_navigation(driver):
+    """TC10: Kiểm tra điều hướng liên kết 'Bạn quên mật khẩu đăng nhập ?'."""
+    login_page = LoginPage(driver)
+    login_page.load()
+
+    # Click vào liên kết quên mật khẩu
+    login_page.click_forgot_password()
+
+    # 1. Xác minh URL chuyển hướng tới trang khôi phục mật khẩu (/Login/GetPass)
+    assert "/Login/GetPass" in login_page.get_current_url(), "Không chuyển hướng đúng tới /Login/GetPass"
+
+    # 2. Xác minh tiêu đề trang khôi phục mật khẩu
+    assert "Lấy lại mật khẩu" in login_page.get_title(), "Tiêu đề trang khôi phục mật khẩu không chính xác"
