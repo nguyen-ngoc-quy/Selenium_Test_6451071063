@@ -127,3 +127,20 @@ def test_tc07_login_whitespace_credentials(driver):
     assert login_page.is_error_displayed(), "Không có thông báo lỗi khi nhập dữ liệu toàn khoảng trắng"
     error_msg = login_page.get_error_message()
     assert len(error_msg.strip()) > 0, "Thông báo lỗi bị rỗng"
+
+
+def test_tc08_remember_me_checkbox_interaction(driver):
+    """TC08: Kiểm tra tương tác với Checkbox 'Giữ tôi luôn đăng nhập' (Xử lý bẫy checkbox ẩn của jQuery)."""
+    login_page = LoginPage(driver)
+    login_page.load()
+
+    # 1. Kiểm tra trạng thái mặc định ban đầu là uncheck (False)
+    assert not login_page.is_remember_me_checked(), "Checkbox mặc định không phải trạng thái uncheck"
+
+    # 2. Click lần 1 qua label đại diện (xử lý bẫy input bị ẩn), trạng thái chuyển sang checked (True)
+    login_page.toggle_remember_me()
+    assert login_page.is_remember_me_checked(), "Checkbox không được check sau lần click đầu tiên"
+
+    # 3. Click lần 2, trạng thái chuyển lại thành uncheck (False)
+    login_page.toggle_remember_me()
+    assert not login_page.is_remember_me_checked(), "Checkbox không uncheck sau lần click thứ hai"
