@@ -93,3 +93,20 @@ def test_tc05_password_field_masked(driver):
     # 3. Kiểm tra placeholder gợi ý đúng 'Mật khẩu'
     placeholder = login_page.get_attribute(login_page.PASSWORD_INPUT, "placeholder")
     assert placeholder == "Mật khẩu", f"Placeholder không chính xác: {placeholder}"
+
+
+def test_tc06_login_invalid_credentials(driver):
+    """TC06: Kiểm tra đăng nhập với tài khoản hoặc mật khẩu không hợp lệ."""
+    login_page = LoginPage(driver)
+    login_page.load()
+
+    # Nhập thông tin tài khoản sai quy cách / không tồn tại
+    login_page.login("user_khong_ton_tai_utc", "matkhau_sai_9999")
+
+    # 1. Xác minh hệ thống từ chối đăng nhập và giữ nguyên tại trang đăng nhập
+    assert "/Login" in login_page.get_current_url(), "Hệ thống chuyển hướng sai khi đăng nhập thất bại"
+
+    # 2. Xác minh hiển thị thông báo lỗi từ chối đăng nhập
+    assert login_page.is_error_displayed(), "Không hiển thị thông báo lỗi khi thông tin đăng nhập sai"
+    error_msg = login_page.get_error_message()
+    assert "Tài khoản hoặc mật khẩu không đúng" in error_msg, f"Nội dung lỗi không chính xác: {error_msg}"
