@@ -75,3 +75,21 @@ def test_tc04_login_empty_username(driver):
     assert login_page.is_error_displayed(), "Không hiển thị thông báo lỗi khi để trống tên đăng nhập"
     error_msg = login_page.get_error_message()
     assert "Bạn chưa nhập tên đăng nhập" in error_msg, f"Nội dung lỗi không chính xác: {error_msg}"
+
+
+def test_tc05_password_field_masked(driver):
+    """TC05: Kiểm tra tính năng che giấu ký tự bảo mật của trường Mật khẩu."""
+    login_page = LoginPage(driver)
+    login_page.load()
+
+    # 1. Xác minh ô mật khẩu có type='password'
+    assert login_page.is_password_masked(), "Trường Mật khẩu không có thuộc tính type='password'"
+
+    # 2. Nhập mật khẩu và xác minh giá trị không bị đổi sang type text
+    login_page.enter_password("SecretP@ssword2026")
+    field_type = login_page.get_attribute(login_page.PASSWORD_INPUT, "type")
+    assert field_type == "password", f"Thuộc tính type bị thay đổi thành: {field_type}"
+
+    # 3. Kiểm tra placeholder gợi ý đúng 'Mật khẩu'
+    placeholder = login_page.get_attribute(login_page.PASSWORD_INPUT, "placeholder")
+    assert placeholder == "Mật khẩu", f"Placeholder không chính xác: {placeholder}"
